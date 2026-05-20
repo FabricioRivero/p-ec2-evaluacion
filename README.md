@@ -1,9 +1,8 @@
-Markdown
 # Simulador de Descargas Concurrentes
 
 Este es mi proyecto para simular descargas concurrentes. Está construido usando Node.js, TypeScript y Worker Threads, aplicando los principios de Diseño Orientado al Dominio (DDD) y patrones de diseño.
 
-## 🚀 Cómo hacer correr el proyecto
+## Cómo hacer correr el proyecto
 
 ### 1. Instalar dependencias
 ```bash
@@ -47,7 +46,7 @@ infrastructure/: Implementaciones concretas, los Worker Threads, el Worker Pool 
 
 interfaces/: Controladores, rutas de Express y middlewares (proporcionados en la estructura base).
 
-✅ Lo que implementé para esta evaluación
+Lo que implementé para esta evaluación
 A partir del andamiaje inicial, desarrollé y completé los siguientes requerimientos:
 
 Worker Pool y Concurrencia: Implementé una piscina de hilos (workers) que encola y procesa descargas en paralelo sin bloquear el hilo principal de Node.js.
