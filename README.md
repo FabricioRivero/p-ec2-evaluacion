@@ -1,82 +1,65 @@
-# Concurrent Download Simulator
+Markdown
+# Simulador de Descargas Concurrentes
 
-Simulator for concurrent downloads implemented with Node.js, TypeScript, and Worker Threads.
+Este es mi proyecto para simular descargas concurrentes. Está construido usando Node.js, TypeScript y Worker Threads, aplicando los principios de Diseño Orientado al Dominio (DDD) y patrones de diseño.
 
-## Quick Start
+## 🚀 Cómo hacer correr el proyecto
 
-### Install
-
+### 1. Instalar dependencias
 ```bash
 npm install
-```
-
-### Development
-
-```bash
+2. Levantar en Modo Desarrollo
+Bash
 npm run dev
-```
+Una vez que el servidor esté corriendo, puedes abrir la documentación y probar la API en Swagger: http://localhost:3000/api-docs
 
-Open http://localhost:3000/api-docs for Swagger documentation.
-
-### Build
-
-```bash
-npm run build
+3. Compilar para Producción
+Bash
+npx tsc
 npm start
-```
-
-## API Endpoints
-
-### Create Download
-
-```bash
+🌐 Endpoints de la API
+Crear una descarga
 POST /api/descargas
-Content-Type: application/json
 
+JSON
 {
-  "url": "https://example.com/file.pdf",
+  "url": "[https://ejemplo.com/archivo-pesado.pdf](https://ejemplo.com/archivo-pesado.pdf)",
   "tipo": "http",
   "maxReintentos": 3
 }
-```
-
-### Get Status
-
-```bash
+Ver el estado de una descarga específica
 GET /api/descargas/{id}/estado
-```
 
-### List Downloads
-
-```bash
+Listar todas las descargas en memoria
 GET /api/descargas
-```
 
-### Retry Download
-
-```bash
+Reintentar una descarga (En construcción)
 POST /api/descargas/{id}/reintentar
-```
 
-## Architecture
+🏗️ Arquitectura del Proyecto (DDD)
+El código está estructurado en capas para separar la lógica de negocio de la infraestructura:
 
-- domain/: entities, value objects, interfaces, errors
-- application/: use cases and handlers
-- infrastructure/: concrete implementations, workers, repositories
-- interfaces/: controllers, routes, middleware
+domain/: Entidades principales (Descarga), Value Objects (UrlDescarga) y la jerarquía de errores.
 
-## Provided Scaffolding
+application/: Casos de uso y el servicio "gerente" (DescargaService).
 
-- Express routes with Swagger
-- Input validation middleware
-- Global error handling middleware
-- DDD-ready folder structure
+infrastructure/: Implementaciones concretas, los Worker Threads, el Worker Pool y las clases de descarga.
 
-### To be implemented by student
+interfaces/: Controladores, rutas de Express y middlewares (proporcionados en la estructura base).
 
-- Entities and value objects
-- Abstract class DescargadorBase
-- Concrete downloaders (HTTP, FTP, Mock)
-- Downloader factory
-- Error hierarchy
-- Worker pool and concurrency
+✅ Lo que implementé para esta evaluación
+A partir del andamiaje inicial, desarrollé y completé los siguientes requerimientos:
+
+Worker Pool y Concurrencia: Implementé una piscina de hilos (workers) que encola y procesa descargas en paralelo sin bloquear el hilo principal de Node.js.
+
+Entidades y Value Objects: Creación de la entidad central y validación de URLs usando objetos de valor.
+
+Clase Abstracta DescargadorBase: Para aplicar herencia en los métodos de descarga.
+
+Descargadores Concretos: Implementación de simuladores independientes para HTTP, FTP y Mock.
+
+Patrón Factory: Creación de DescargadorFactory para decidir dinámicamente qué clase instanciar según la petición (Polimorfismo).
+
+Jerarquía de Errores: Errores personalizados (UrlInvalidaError, etc.) para un mejor manejo de excepciones.
+
+
