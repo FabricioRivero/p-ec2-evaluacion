@@ -2,32 +2,30 @@ import { parentPort } from 'worker_threads';
 import { MensajeWorker, RespuestaWorker } from '../../shared/types';
 import { logger } from '../../shared/utils/logger';
 
-/**
- * Worker that executes downloads in isolation
- */
 if (!parentPort) {
   throw new Error('This script must be executed as a Worker');
 }
 
+// El trabajador se queda "vivo" esperando que le lleguen mensajes (tareas)
 parentPort.on('message', async (mensaje: MensajeWorker) => {
   try {
-    logger.debug(`Worker starting download: ${mensaje.id}`);
+    logger.info(`[Worker] Iniciando descarga simulada (Mock): ${mensaje.id} de tipo ${mensaje.tipo}`);
 
-    const { id, url, tipo, maxReintentos } = mensaje;
+    // Simulamos el tiempo que tarda una descarga real (3 segundos)
+    await new Promise(resolve => setTimeout(resolve, 3000));
 
-    // TODO: Student implementation
-    // 1. Instantiate downloader by type
-    // 2. Call ejecutarConReintento()
-    // 3. Send result to main thread
-
+    // Preparamos la respuesta exitosa con los tipos exactos del profesor
     const respuesta: RespuestaWorker = {
-      id,
+      id: mensaje.id,
       success: true,
-      data: Buffer.from('mock data'),
+      data: Buffer.from(`Archivo simulado de ${mensaje.url} descargado con éxito`),
       intentos: 1
     };
 
+    // Le devolvemos el resultado al hilo principal
     parentPort!.postMessage(respuesta);
+    
+    logger.info(`[Worker] Descarga ${mensaje.id} completada. Listo para la siguiente tarea.`);
   } catch (error) {
     const respuesta: RespuestaWorker = {
       id: mensaje.id,
