@@ -35,7 +35,7 @@ GET /api/descargas
 Reintentar una descarga (En construcción)
 POST /api/descargas/{id}/reintentar
 
-🏗️ Arquitectura del Proyecto (DDD)
+Arquitectura del Proyecto (DDD)
 El código está estructurado en capas para separar la lógica de negocio de la infraestructura:
 
 domain/: Entidades principales (Descarga), Value Objects (UrlDescarga) y la jerarquía de errores.
