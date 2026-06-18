@@ -4,37 +4,66 @@ import { WorkerPool } from '../shared/utils/workerPool';
 
 export class DescargaService {
     private descargas: Map<string, Descarga> = new Map();
-    // Contratamos la piscina de trabajadores
     private pool: WorkerPool = new WorkerPool();
 
-    iniciarDescarga(url: string, tipo: string = 'mock'): Descarga {
+    iniciarDescarga(url: string, tipo: string = 'mock', maxReintentos: number = 3): Descarga {
         const id = uuidv4();
-        const nuevaDescarga = new Descarga(id, url);
+        const nuevaDescarga = new Descarga(id, url, tipo, maxReintentos);
         this.descargas.set(id, nuevaDescarga);
 
-        // Enviamos la tarea a la piscina
         this.pool.enqueue({
-            id: id,
-            url: url,
+            id,
+            url,
             tipo: tipo as any,
-            maxReintentos: 3
+            maxReintentos
         }).then((respuesta) => {
-            // Cuando la piscina termina el trabajo (después de los 3 segundos simulados)
-            const descargaActual = this.descargas.get(respuesta.id);
-            if (descargaActual) {
+            const descarga = this.descargas.get(respuesta.id);
+            if (descarga) {
                 if (respuesta.success) {
-                    descargaActual.actualizarProgreso(100);
-                    console.log(`[Service] Descarga completada con éxito: ${respuesta.id}`);
+                    descarga.actualizarProgreso(100);
                 } else {
-                    descargaActual.marcarComoError();
-                    console.error(`[Service] Error en la descarga: ${respuesta.error}`);
+                    descarga.marcarComoError(respuesta.error);
                 }
             }
         }).catch(error => {
-            console.error(`[Service] Error al intentar encolar:`, error);
+            const descarga = this.descargas.get(id);
+            if (descarga) descarga.marcarComoError(String(error));
         });
 
         return nuevaDescarga;
+    }
+
+    reintentarDescarga(id: string): Descarga {
+        const descarga = this.descargas.get(id);
+        if (!descarga) {
+            throw new Error('Descarga no encontrada');
+        }
+        if (descarga.estado !== 'error') {
+            throw new Error('Solo se pueden reintentar descargas en estado error');
+        }
+
+        descarga.reiniciar();
+
+        this.pool.enqueue({
+            id,
+            url: descarga.url,
+            tipo: descarga.tipo as any,
+            maxReintentos: descarga.maxReintentos
+        }).then((respuesta) => {
+            const d = this.descargas.get(respuesta.id);
+            if (d) {
+                if (respuesta.success) {
+                    d.actualizarProgreso(100);
+                } else {
+                    d.marcarComoError(respuesta.error);
+                }
+            }
+        }).catch(error => {
+            const d = this.descargas.get(id);
+            if (d) d.marcarComoError(String(error));
+        });
+
+        return descarga;
     }
 
     obtenerTodas(): Descarga[] {

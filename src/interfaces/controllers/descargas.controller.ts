@@ -1,84 +1,77 @@
 import { Request, Response, NextFunction } from 'express';
 import { DescargaService } from '../../application/DescargaService';
+import { UrlDescarga, UrlInvalidaError } from '../../domain/Descarga';
 
-// Iniciamos nuestro "gerente"
 const descargaService = new DescargaService();
 
 export const crearDescarga = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
+    req: Request, res: Response, next: NextFunction
 ): Promise<void> => {
-  try {
-    const { url, tipo } = req.body;
+    try {
+        const { url, tipo = 'mock', maxReintentos = 3 } = req.body;
 
-    if (!url) {
-      res.status(400).json({ error: 'La URL es requerida' });
-      return;
+        if (!url) {
+            res.status(400).json({ message: 'La URL es requerida' });
+            return;
+        }
+
+        try {
+            new UrlDescarga(url);
+        } catch (e) {
+            res.status(400).json({ message: 'URL inválida: debe empezar con http, ftp o mock' });
+            return;
+        }
+
+        const descarga = descargaService.iniciarDescarga(url, tipo, Number(maxReintentos));
+        res.status(201).json(descarga);
+    } catch (error) {
+        next(error);
     }
-
-    // Le decimos al gerente que inicie el trabajo
-    const nuevaDescarga = descargaService.iniciarDescarga(url);
-    
-    res.status(201).json(nuevaDescarga);
-  } catch (error) {
-    next(error);
-  }
 };
 
 export const obtenerEstadoDescarga = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
+    req: Request, res: Response, next: NextFunction
 ): Promise<void> => {
-  try {
-    const { id } = req.params;
-    
-    // Buscamos una descarga específica por su ID
-    const descarga = descargaService.obtenerPorId(id);
+    try {
+        const { id } = req.params;
+        const descarga = descargaService.obtenerPorId(id);
 
-    if (!descarga) {
-      res.status(404).json({ error: 'Descarga no encontrada' });
-      return;
+        if (!descarga) {
+            res.status(404).json({ message: 'Descarga no encontrada' });
+            return;
+        }
+
+        res.json(descarga);
+    } catch (error) {
+        next(error);
     }
-
-    res.json(descarga);
-  } catch (error) {
-    next(error);
-  }
 };
 
 export const listarDescargas = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
+    req: Request, res: Response, next: NextFunction
 ): Promise<void> => {
-  try {
-    // Pedimos la lista completa
-    const descargas = descargaService.obtenerTodas();
-    
-    res.json({
-      descargas: descargas,
-      total: descargas.length
-    });
-  } catch (error) {
-    next(error);
-  }
+    try {
+        const descargas = descargaService.obtenerTodas();
+        res.json(descargas); // array directo, no objeto
+    } catch (error) {
+        next(error);
+    }
 };
 
 export const reintentarDescarga = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
+    req: Request, res: Response, next: NextFunction
 ): Promise<void> => {
-  try {
-    const { id } = req.params;
-    res.status(501).json({
-      id,
-      estado: 'REINTENTANDO',
-      mensaje: 'Funcionalidad en construcción'
-    });
-  } catch (error) {
-    next(error);
-  }
+    try {
+        const { id } = req.params;
+        const descarga = descargaService.reintentarDescarga(id);
+        res.json(descarga);
+    } catch (error: any) {
+        if (error.message === 'Descarga no encontrada') {
+            res.status(404).json({ message: error.message });
+        } else if (error.message.includes('reintentos')) {
+            res.status(400).json({ message: error.message });
+        } else {
+            next(error);
+        }
+    }
 };
