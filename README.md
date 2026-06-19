@@ -134,7 +134,7 @@ p-ec2-evaluacion/
 
 ---
 
-## ⚙️ Instalación y Ejecución
+## ⚙️ Instalación y Ejecucion
 
 ### Requisitos
 - Node.js 18+
