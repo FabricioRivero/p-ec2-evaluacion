@@ -115,7 +115,7 @@ p-ec2-evaluacion/
 │   │   ├── utils/                         # Utilidades del frontend
 │   │   │   └── validators.ts              # Validadores de formulario
 │   │   │
-│   │   └── tests/                     # Tests del frontend
+│   │   └── __tests__/                     # Tests del frontend
 │   │       ├── integration/
 │   │       │   └── downloadAPI.test.ts    # Tests de integración API (6 tests)
 │   │       └── e2e/
