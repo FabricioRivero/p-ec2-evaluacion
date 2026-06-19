@@ -51,14 +51,16 @@ app.get('/health', (req, res) => {
 // Error handling
 app.use(errorMiddleware);
 
-// Server
-app.listen(config.PORT, () => {
-  logger.info(`Server running on http://localhost:${config.PORT}`);
-  logger.info(`Swagger available at http://localhost:${config.PORT}/api-docs`);
-  logger.info('Configuration:');
-  logger.info(`  - MAX_CONCURRENT_WORKERS: ${config.MAX_CONCURRENT_WORKERS}`);
-  logger.info(`  - DOWNLOAD_TIMEOUT_MS: ${config.DOWNLOAD_TIMEOUT_MS}`);
-  logger.info(`  - MAX_RETRIES: ${config.MAX_RETRIES}`);
-});
+// Solo inicia el servidor si no estamos en modo test
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(config.PORT, () => {
+    logger.info(`Server running on http://localhost:${config.PORT}`);
+    logger.info(`Swagger available at http://localhost:${config.PORT}/api-docs`);
+    logger.info('Configuration:');
+    logger.info(`  - MAX_CONCURRENT_WORKERS: ${config.MAX_CONCURRENT_WORKERS}`);
+    logger.info(`  - DOWNLOAD_TIMEOUT_MS: ${config.DOWNLOAD_TIMEOUT_MS}`);
+    logger.info(`  - MAX_RETRIES: ${config.MAX_RETRIES}`);
+  });
+}
 
 export default app;
