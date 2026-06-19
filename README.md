@@ -1,64 +1,223 @@
-# Simulador de Descargas Concurrentes
+# 🚀 Simulador de Descargas Concurrentes
 
-Este es mi proyecto para simular descargas concurrentes. Está construido usando Node.js, TypeScript y Worker Threads, aplicando los principios de Diseño Orientado al Dominio (DDD) y patrones de diseño.
+**SIS-113 Programación Orientada a Objetos | EC3**  
+**Estudiante:** Fabricio Rivero  
+**Fecha:** Junio 2026
 
-## Cómo hacer correr el proyecto
+Sistema de simulación de descargas concurrentes con Worker Threads, DDD, API REST y frontend Vue 3.
 
-### 1. Instalar dependencias
+---
+
+## 📋 Descripción
+
+Sistema que simula la descarga de archivos desde diferentes fuentes (HTTP, FTP, Mock) procesándolos de manera concurrente usando Worker Threads de Node.js. Expone una API REST documentada con Swagger y sigue principios de Domain-Driven Design (DDD).
+
+El frontend Vue 3 permite interactuar visualmente con el sistema en tiempo real mediante polling cada 2 segundos.
+
+---
+
+## 🛠️ Stack Tecnológico
+
+### Backend
+- **Node.js + TypeScript** — Runtime y lenguaje principal
+- **Express** — Framework HTTP
+- **Worker Threads** — Concurrencia real en Node.js
+- **Swagger** — Documentación de API REST
+- **DDD** — Domain-Driven Design (entidades, value objects, servicios)
+
+### Frontend
+- **Vue 3** — Framework reactivo con Composition API
+- **Vite** — Build tool ultrarrápido
+- **Pinia** — State management
+- **Axios** — Cliente HTTP
+- **TypeScript** — Tipado estricto
+
+### Testing
+- **Vitest** — Test runner
+- **Supertest** — Tests de integración HTTP
+
+---
+
+## 📁 Estructura del Proyecto
+
+src/
+
+├── domain/
+
+│   └── Descarga.ts          # Entidad, Value Objects, errores
+
+├── application/
+
+│   └── DescargaService.ts   # Lógica de negocio
+
+├── infrastructure/
+
+│   └── workers/             # Worker Threads
+
+├── interfaces/
+
+│   ├── controllers/         # Controllers Express
+
+│   ├── middleware/          # CORS, errores, validación
+
+│   └── routes/              # Rutas API
+
+├── shared/
+
+│   ├── config.ts
+
+│   └── utils/
+
+├── frontend/
+
+│   ├── components/          # DownloadForm, DownloadList, etc.
+
+│   ├── pages/               # DashboardPage
+
+│   ├── services/            # apiClient, downloadService
+
+│   ├── composables/         # useDownloads, useDownloadForm
+
+│   ├── types/               # Tipos TypeScript
+
+│   └── tests/
+
+│       ├── integration/     # Tests de API backend
+
+│       └── e2e/             # Tests E2E flujos completos
+
+└── tests/
+
+└── unit/                # Tests unitarios domain
+
+---
+
+## ⚙️ Instalación y Ejecución
+
+### Requisitos
+- Node.js 18+
+- npm
+
+### 1. Clonar el repositorio
+```bash
+git clone https://github.com/FabricioRivero/p-ec2-evaluacion
+cd p-ec2-evaluacion
+```
+
+### 2. Instalar dependencias
 ```bash
 npm install
-2. Levantar en Modo Desarrollo
-Bash
+```
+
+### 3. Configurar variables de entorno
+```bash
+cp .env.example .env
+```
+
+### 4. Ejecutar Backend (Terminal 1)
+```bash
 npm run dev
-Una vez que el servidor esté corriendo, puedes abrir la documentación y probar la API en Swagger: http://localhost:3000/api-docs
+```
+Backend disponible en: `http://localhost:3000`  
+Swagger disponible en: `http://localhost:3000/api-docs`
 
-3. Compilar para Producción
-Bash
-npx tsc
-npm start
-🌐 Endpoints de la API
-Crear una descarga
-POST /api/descargas
+### 5. Ejecutar Frontend (Terminal 2)
+```bash
+npx vite
+```
+Frontend disponible en: `http://localhost:5173`
 
-JSON
+---
+
+## 🧪 Ejecutar Tests
+
+### Todos los tests
+```bash
+npx vitest run
+```
+
+### Solo tests unitarios
+```bash
+npx vitest run src/__tests__/unit
+```
+
+### Solo tests de integración
+```bash
+npx vitest run src/frontend/__tests__/integration/downloadAPI.test.ts
+```
+
+### Solo tests E2E
+```bash
+npx vitest run src/frontend/__tests__/integration/e2e/downloadFlow.spec.ts
+```
+
+---
+
+## 📊 Resultados de Tests
+
+✓ src/tests/unit/UrlDescarga.test.ts          (15 tests)
+
+✓ src/frontend/tests/integration/downloadAPI.test.ts   (6 tests)
+
+✓ src/frontend/tests/integration/e2e/downloadFlow.spec.ts  (5 tests)
+Test Files: 3 passed
+
+Tests:      26 passed
+
+---
+
+## 🌐 API REST
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| POST | `/api/descargas` | Crear nueva descarga |
+| GET | `/api/descargas` | Listar todas las descargas |
+| GET | `/api/descargas/:id/estado` | Obtener estado de descarga |
+| POST | `/api/descargas/:id/reintentar` | Reintentar descarga fallida |
+| GET | `/health` | Health check |
+| GET | `/api-docs` | Documentación Swagger |
+
+### Ejemplo de request
+```bash
+curl -X POST http://localhost:3000/api/descargas \
+  -H "Content-Type: application/json" \
+  -d '{"url": "http://ejemplo.com/file.pdf", "tipo": "mock", "maxReintentos": 3}'
+```
+
+### Ejemplo de response
+```json
 {
-  "url": "[https://ejemplo.com/archivo-pesado.pdf](https://ejemplo.com/archivo-pesado.pdf)",
-  "tipo": "http",
-  "maxReintentos": 3
+  "id": "uuid-generado",
+  "url": "http://ejemplo.com/file.pdf",
+  "tipo": "mock",
+  "estado": "pending",
+  "progreso": 0,
+  "intentos": 0,
+  "maxReintentos": 3,
+  "fechaCreacion": "2026-06-19T00:00:00.000Z"
 }
-Ver el estado de una descarga específica
-GET /api/descargas/{id}/estado
+```
 
-Listar todas las descargas en memoria
-GET /api/descargas
+---
 
-Reintentar una descarga (En construcción)
-POST /api/descargas/{id}/reintentar
+## 🎯 Funcionalidades del Frontend
 
-Arquitectura del Proyecto (DDD)
-El código está estructurado en capas para separar la lógica de negocio de la infraestructura:
+- ✅ Formulario para crear descargas con validación en tiempo real
+- ✅ Tabla con todas las descargas (ID, URL, Tipo, Estado, Progreso, Intentos, Fecha)
+- ✅ Colores por estado (gris=pendiente, azul=en progreso, verde=completado, rojo=error)
+- ✅ Barra de progreso animada
+- ✅ Botón reintentar para descargas en error
+- ✅ Estadísticas en tiempo real (Total, En Progreso, Completadas, Errores)
+- ✅ Polling automático cada 2 segundos
+- ✅ Diseño responsive (mobile-first)
 
-domain/: Entidades principales (Descarga), Value Objects (UrlDescarga) y la jerarquía de errores.
+---
 
-application/: Casos de uso y el servicio "gerente" (DescargaService).
+## 🏗️ Arquitectura DDD
 
-infrastructure/: Implementaciones concretas, los Worker Threads, el Worker Pool y las clases de descarga.
-
-interfaces/: Controladores, rutas de Express y middlewares (proporcionados en la estructura base).
-
-Lo que implementé para esta evaluación
-A partir del andamiaje inicial, desarrollé y completé los siguientes requerimientos:
-
-Worker Pool y Concurrencia: Implementé una piscina de hilos (workers) que encola y procesa descargas en paralelo sin bloquear el hilo principal de Node.js.
-
-Entidades y Value Objects: Creación de la entidad central y validación de URLs usando objetos de valor.
-
-Clase Abstracta DescargadorBase: Para aplicar herencia en los métodos de descarga.
-
-Descargadores Concretos: Implementación de simuladores independientes para HTTP, FTP y Mock.
-
-Patrón Factory: Creación de DescargadorFactory para decidir dinámicamente qué clase instanciar según la petición (Polimorfismo).
-
-Jerarquía de Errores: Errores personalizados (UrlInvalidaError, etc.) para un mejor manejo de excepciones.
-
-
+- **Entidad:** `Descarga` — objeto principal con identidad y ciclo de vida
+- **Value Object:** `UrlDescarga` — valida y encapsula la URL
+- **Errores de dominio:** `DescargaError`, `UrlInvalidaError`
+- **Application Service:** `DescargaService` — orquesta la lógica
+- **Infrastructure:** `WorkerPool`, `Descargadores` — implementación técnica
+- **Interface:** Controllers, Routes, Middleware — capa HTTP
