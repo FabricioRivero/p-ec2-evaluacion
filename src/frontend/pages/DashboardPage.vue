@@ -2,10 +2,10 @@
   <div class="dashboard">
     <header class="header">
       <div>
-        <h1>🚀 Simulador de Descargas Concurrentes</h1>
-        <p class="subtitle">Worker Threads + DDD | SIS-113 Programación Orientada a Objetos</p>
+        <h1>Simulador de Descargas Concurrentes</h1>
+        <p class="subtitle">SIS-113 Programación Orientada a Objetos</p>
       </div>
-      <div class="polling-badge">🔴 Live — actualiza cada 2s</div>
+      <div class="polling-badge">Live — actualiza cada 2s</div>
     </header>
 
     <!-- Stats -->

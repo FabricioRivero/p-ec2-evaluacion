@@ -1,6 +1,6 @@
 <template>
   <div class="form-card">
-    <h2>🆕 Nueva Descarga</h2>
+    <h2> Nueva Descarga</h2>
 
     <div class="field">
       <label>URL</label>
@@ -32,7 +32,7 @@
     <p v-if="formError" class="hint error">{{ formError }}</p>
 
     <button @click="submit" :disabled="!formValido || submitting">
-      {{ submitting ? '⏳ Iniciando...' : '🚀 Iniciar Descarga' }}
+      {{ submitting ? ' Iniciando...' : ' Iniciar Descarga' }}
     </button>
   </div>
 </template>

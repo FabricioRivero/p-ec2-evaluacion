@@ -1,6 +1,6 @@
 <template>
   <div class="list-card">
-    <h2>📋 Descargas ({{ downloads.length }})</h2>
+    <h2> Descargas ({{ downloads.length }})</h2>
 
     <div v-if="downloads.length === 0" class="empty">
       No hay descargas todavía. ¡Crea una arriba!
