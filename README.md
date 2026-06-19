@@ -80,7 +80,7 @@ src/
 
 │   ├── types/               # Tipos TypeScript
 
-│   └── tests/
+│   └── __tests__/
 
 │       ├── integration/     # Tests de API backend
 
