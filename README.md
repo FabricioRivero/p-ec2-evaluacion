@@ -29,7 +29,8 @@ El frontend Vue 3 permite interactuar visualmente con el sistema en tiempo real 
 - **Vue 3** — Framework reactivo con Composition API
 - **Vite** — Build tool ultrarrápido
 - **Pinia** — State management
-- **Axios** — Cliente HTTP
+- **Axios** — Cliente HTTP (operaciones CRUD)
+- **Fetch API** — Cliente HTTP nativo (endpoint de cancelación)
 - **TypeScript** — Tipado estricto
 
 ### Testing
@@ -39,6 +40,7 @@ El frontend Vue 3 permite interactuar visualmente con el sistema en tiempo real 
 ---
 
 ## 📁 Estructura del Proyecto
+
 
 ```
 p-ec2-evaluacion/
@@ -87,8 +89,8 @@ p-ec2-evaluacion/
 │   │   │
 │   │   ├── components/                    # Componentes reutilizables
 │   │   │   ├── DownloadForm.vue           # Formulario nueva descarga
-│   │   │   ├── DownloadList.vue           # Tabla de descargas
-│   │   │   ├── DownloadStatus.vue         # Badge de estado
+│   │   │   ├── DownloadList.vue           # Tabla de descargas (con botón cancelar)
+│   │   │   ├── DownloadStatus.vue         # Badge de estado (incluye cancelado)
 │   │   │   ├── DownloadCard.vue           # Modal detalle de descarga
 │   │   │   ├── ProgressBar.vue            # Barra de progreso
 │   │   │   └── ErrorBoundary.vue          # Captura errores del árbol
@@ -113,13 +115,13 @@ p-ec2-evaluacion/
 │   │   ├── utils/                         # Utilidades del frontend
 │   │   │   └── validators.ts              # Validadores de formulario
 │   │   │
-│   │   └── __tests__/                     # Tests del frontend
+│   │   └── tests/                     # Tests del frontend
 │   │       ├── integration/
 │   │       │   └── downloadAPI.test.ts    # Tests de integración API (6 tests)
 │   │       └── e2e/
 │   │           └── downloadFlow.spec.ts   # Tests E2E flujos completos (5 tests)
 │   │
-│   └── __tests__/                         # Tests del backend
+│   └── tests/                         # Tests del backend
 │       └── unit/
 │           └── UrlDescarga.test.ts        # Tests unitarios dominio (15 tests)
 │
@@ -208,14 +210,15 @@ Tests:      26 passed
 
 ## 🌐 API REST
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| POST | `/api/descargas` | Crear nueva descarga |
-| GET | `/api/descargas` | Listar todas las descargas |
-| GET | `/api/descargas/:id/estado` | Obtener estado de descarga |
-| POST | `/api/descargas/:id/reintentar` | Reintentar descarga fallida |
-| GET | `/health` | Health check |
-| GET | `/api-docs` | Documentación Swagger |
+| Método | Endpoint                        | Descripción                   |
+| ------ | ------------------------------- | ----------------------------- |
+| POST   | `/api/descargas`                | Crear nueva descarga          |
+| GET    | `/api/descargas`                | Listar todas las descargas    |
+| GET    | `/api/descargas/:id/estado`     | Obtener estado de descarga    |
+| POST   | `/api/descargas/:id/reintentar` | Reintentar descarga fallida   |
+| DELETE | `/api/descargas/:id/cancelar`   | Cancelar descarga en progreso |
+| GET    | `/health`                       | Health check                  |
+| GET    | `/api-docs`                     | Documentación Swagger         |
 
 ### Ejemplo de request
 ```bash
@@ -242,22 +245,59 @@ curl -X POST http://localhost:3000/api/descargas \
 
 ## 🎯 Funcionalidades del Frontend
 
-- ✅ Formulario para crear descargas con validación en tiempo real
-- ✅ Tabla con todas las descargas (ID, URL, Tipo, Estado, Progreso, Intentos, Fecha)
-- ✅ Colores por estado (gris=pendiente, azul=en progreso, verde=completado, rojo=error)
-- ✅ Barra de progreso animada
-- ✅ Botón reintentar para descargas en error
-- ✅ Estadísticas en tiempo real (Total, En Progreso, Completadas, Errores)
-- ✅ Polling automático cada 2 segundos
-- ✅ Diseño responsive (mobile-first)
+✅ Formulario para crear descargas con validación en tiempo real
+✅ Tabla con todas las descargas (ID, URL, Tipo, Estado, Progreso, Intentos, Fecha)
+✅ Colores por estado (gris=pendiente, azul=en progreso, verde=completado, rojo=error, naranja=cancelado)
+✅ Barra de progreso animada
+✅ Botón reintentar para descargas en error
+✅ Botón cancelar para descargas pendientes/en progreso
+✅ Estado cancelado con color distintivo (naranja)
+✅ Estadísticas en tiempo real (Total, En Progreso, Completadas, Errores, Canceladas)
+✅ Polling automático cada 2 segundos
+✅ Diseño responsive (mobile-first)
 
 ---
 
 ## 🏗️ Arquitectura DDD
 
-- **Entidad:** `Descarga` — objeto principal con identidad y ciclo de vida
-- **Value Object:** `UrlDescarga` — valida y encapsula la URL
-- **Errores de dominio:** `DescargaError`, `UrlInvalidaError`
-- **Application Service:** `DescargaService` — orquesta la lógica
-- **Infrastructure:** `WorkerPool`, `Descargadores` — implementación técnica
-- **Interface:** Controllers, Routes, Middleware — capa HTTP
+- Entidad: Descarga — objeto principal con identidad y ciclo de vida
+- Value Object: UrlDescarga — valida y encapsula la URL
+- Errores de dominio: DescargaError, UrlInvalidaError
+- Application Service: DescargaService — orquesta la lógica
+- Infrastructure: WorkerPool, Descargadores — implementación técnica
+- Interface: Controllers, Routes, Middleware — capa HTTP
+
+
+📄 Documentación Adicional
+Informe Técnico: Ver Informe_EC3_FabricioRivero.pdf en el repositorio
+Video de Presentación: Disponible en [enlace al video]
+Repositorio: github.com/FabricioRivero/p-ec2-evaluacion
+
+
+
+---
+
+## ✅ CAMBIOS REALIZADOS EN ESTE README
+
+| # | Cambio | ¿Por qué? |
+|---|--------|-----------|
+| 1 | `__tests__` con doble guión bajo | Coincide con tu repo real y la consigna |
+| 2 | Agregado `DELETE /api/descargas/:id/cancelar` | Endpoint nuevo de cancelación |
+| 3 | Agregado `Fetch API` en Stack Técnico | Usas fetch nativo para cancelar |
+| 4 | Agregado "Botón cancelar" en funcionalidades | Funcionalidad implementada |
+| 5 | Agregado "naranja=cancelado" en colores | Estado nuevo |
+| 6 | Agregado "Canceladas" en estadísticas | Métrica adicional |
+| 7 | Notas en componentes `(con botón cancelar)`, `(incluye cancelado)` | Claridad |
+| 8 | Sección "Documentación Adicional" al final | Enlace al informe y video |
+
+---
+
+## 🚀 PRÓXIMO PASO
+
+1. Copia todo el texto de arriba
+2. Reemplaza tu `README.md` actual en el repo
+3. Haz commit:
+```bash
+git add README.md
+git commit -m "docs: update README with cancellation feature and correct structure"
+git push origin main
