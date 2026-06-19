@@ -115,13 +115,13 @@ p-ec2-evaluacion/
 │   │   ├── utils/                         # Utilidades del frontend
 │   │   │   └── validators.ts              # Validadores de formulario
 │   │   │
-│   │   └── tests/                     # Tests del frontend
+│   │   └── __tests__/                     # Tests del frontend
 │   │       ├── integration/
 │   │       │   └── downloadAPI.test.ts    # Tests de integración API (6 tests)
 │   │       └── e2e/
 │   │           └── downloadFlow.spec.ts   # Tests E2E flujos completos (5 tests)
 │   │
-│   └── tests/                         # Tests del backend
+│   └── __tests__/                         # Tests del backend
 │       └── unit/
 │           └── UrlDescarga.test.ts        # Tests unitarios dominio (15 tests)
 │
@@ -197,11 +197,11 @@ npx vitest run src/frontend/__tests__/integration/e2e/downloadFlow.spec.ts
 
 ## 📊 Resultados de Tests
 
-✓ src/tests/unit/UrlDescarga.test.ts          (15 tests)
+✓ src/__tests__/unit/UrlDescarga.test.ts          (15 tests)
 
-✓ src/frontend/tests/integration/downloadAPI.test.ts   (6 tests)
+✓ src/frontend/__tests__/integration/downloadAPI.test.ts   (6 tests)
 
-✓ src/frontend/tests/integration/e2e/downloadFlow.spec.ts  (5 tests)
+✓ src/frontend/__tests__/integration/e2e/downloadFlow.spec.ts  (5 tests)
 Test Files: 3 passed
 
 Tests:      26 passed
