@@ -121,7 +121,7 @@ p-ec2-evaluacion/
 │   │       └── e2e/
 │   │           └── downloadFlow.spec.ts   # Tests E2E flujos completos (5 tests)
 │   │
-│   └── tests/                         # Tests del backend
+│   └── __tests__/                         # Tests del backend
 │       └── unit/
 │           └── UrlDescarga.test.ts        # Tests unitarios dominio (15 tests)
 │
