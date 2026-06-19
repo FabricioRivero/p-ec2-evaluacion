@@ -40,55 +40,95 @@ El frontend Vue 3 permite interactuar visualmente con el sistema en tiempo real 
 
 ## 📁 Estructura del Proyecto
 
-src/
-
-├── domain/
-
-│   └── Descarga.ts          # Entidad, Value Objects, errores
-
-├── application/
-
-│   └── DescargaService.ts   # Lógica de negocio
-
-├── infrastructure/
-
-│   └── workers/             # Worker Threads
-
-├── interfaces/
-
-│   ├── controllers/         # Controllers Express
-
-│   ├── middleware/          # CORS, errores, validación
-
-│   └── routes/              # Rutas API
-
-├── shared/
-
-│   ├── config.ts
-
-│   └── utils/
-
-├── frontend/
-
-│   ├── components/          # DownloadForm, DownloadList, etc.
-
-│   ├── pages/               # DashboardPage
-
-│   ├── services/            # apiClient, downloadService
-
-│   ├── composables/         # useDownloads, useDownloadForm
-
-│   ├── types/               # Tipos TypeScript
-
-│   └── __tests__/
-
-│       ├── integration/     # Tests de API backend
-
-│       └── e2e/             # Tests E2E flujos completos
-
-└── tests/
-
-└── unit/                # Tests unitarios domain
+```
+p-ec2-evaluacion/
+├── src/
+│   ├── server.ts                          # Punto de entrada del servidor Express
+│   │
+│   ├── domain/                            # Capa de Dominio (DDD)
+│   │   ├── Descarga.ts                    # Entidad principal + Value Objects + Errores
+│   │   └── Modelos.ts                     # Modelos del dominio
+│   │
+│   ├── application/                       # Capa de Aplicación (DDD)
+│   │   └── DescargaService.ts             # Servicio de aplicación - lógica de negocio
+│   │
+│   ├── infrastructure/                    # Capa de Infraestructura (DDD)
+│   │   └── workers/
+│   │       ├── Descargadores.ts           # Implementaciones HTTP, FTP, Mock
+│   │       └── descargaWorker.ts          # Worker Thread de Node.js
+│   │
+│   ├── interfaces/                        # Capa de Interfaces (DDD)
+│   │   ├── controllers/
+│   │   │   └── descargas.controller.ts    # Controllers Express
+│   │   ├── middleware/
+│   │   │   ├── corsMiddleware.ts          # Middleware CORS
+│   │   │   ├── errorMiddleware.ts         # Manejo global de errores
+│   │   │   └── validationMiddleware.ts    # Validación de requests
+│   │   └── routes/
+│   │       └── descargas.routes.ts        # Definición de rutas API
+│   │
+│   ├── shared/                            # Utilidades compartidas
+│   │   ├── config.ts                      # Configuración de la app
+│   │   ├── instances.ts                   # Instancias compartidas
+│   │   ├── enums/
+│   │   │   └── index.ts                   # Enums del dominio
+│   │   ├── types/
+│   │   │   └── index.ts                   # Tipos e interfaces TypeScript
+│   │   └── utils/
+│   │       ├── logger.ts                  # Logger centralizado
+│   │       ├── urlValidator.ts            # Validador de URLs
+│   │       ├── uuidGenerator.ts           # Generador de UUIDs
+│   │       └── workerPool.ts              # Pool de Worker Threads
+│   │
+│   ├── frontend/                          # Frontend Vue 3
+│   │   ├── App.vue                        # Componente raíz
+│   │   ├── main.ts                        # Punto de entrada Vue
+│   │   ├── index.html                     # HTML base
+│   │   │
+│   │   ├── components/                    # Componentes reutilizables
+│   │   │   ├── DownloadForm.vue           # Formulario nueva descarga
+│   │   │   ├── DownloadList.vue           # Tabla de descargas
+│   │   │   ├── DownloadStatus.vue         # Badge de estado
+│   │   │   ├── DownloadCard.vue           # Modal detalle de descarga
+│   │   │   ├── ProgressBar.vue            # Barra de progreso
+│   │   │   └── ErrorBoundary.vue          # Captura errores del árbol
+│   │   │
+│   │   ├── pages/                         # Páginas principales
+│   │   │   └── DashboardPage.vue          # Dashboard principal
+│   │   │
+│   │   ├── services/                      # Servicios HTTP
+│   │   │   ├── apiClient.ts               # Cliente Axios configurado
+│   │   │   └── downloadService.ts         # Llamadas a la API REST
+│   │   │
+│   │   ├── composables/                   # Lógica reactiva reutilizable
+│   │   │   ├── useDownloads.ts            # Estado descargas + polling
+│   │   │   └── useDownloadForm.ts         # Estado y validación del formulario
+│   │   │
+│   │   ├── types/                         # Tipos TypeScript
+│   │   │   └── index.ts                   # Interfaces y tipos del frontend
+│   │   │
+│   │   ├── stores/                        # Pinia stores
+│   │   │   └── downloadStore.ts           # Store global de descargas
+│   │   │
+│   │   ├── utils/                         # Utilidades del frontend
+│   │   │   └── validators.ts              # Validadores de formulario
+│   │   │
+│   │   └── __tests__/                     # Tests del frontend
+│   │       ├── integration/
+│   │       │   └── downloadAPI.test.ts    # Tests de integración API (6 tests)
+│   │       └── e2e/
+│   │           └── downloadFlow.spec.ts   # Tests E2E flujos completos (5 tests)
+│   │
+│   └── __tests__/                         # Tests del backend
+│       └── unit/
+│           └── UrlDescarga.test.ts        # Tests unitarios dominio (15 tests)
+│
+├── vite.config.ts                         # Configuración Vite
+├── vitest.config.ts                       # Configuración Vitest
+├── tsconfig.json                          # Configuración TypeScript
+├── package.json                           # Dependencias y scripts
+└── README.md                              # Documentación del proyecto
+```
 
 ---
 
