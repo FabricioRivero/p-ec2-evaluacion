@@ -2,10 +2,10 @@
   <div class="dashboard">
     <header class="header">
       <div>
-        <h1>Simulador de Descargas Concurrentes</h1>
-        <p class="subtitle">SIS-113 Programación Orientada a Objetos</p>
+        <h1>🚀 Simulador de Descargas Concurrentes</h1>
+        <p class="subtitle">Worker Threads + DDD | SIS-113 Programación Orientada a Objetos</p>
       </div>
-      <div class="polling-badge">Live — actualiza cada 2s</div>
+      <div class="polling-badge">🔴 Live — actualiza cada 2s</div>
     </header>
 
     <!-- Stats -->
@@ -28,8 +28,10 @@
       </div>
     </div>
 
-    <!-- Form -->
-    <DownloadForm :on-submit="crearDescarga" />
+    <!-- ErrorBoundary wrapping el formulario -->
+    <ErrorBoundary>
+      <DownloadForm :on-submit="crearDescarga" />
+    </ErrorBoundary>
 
     <!-- Notifications -->
     <transition name="fade">
@@ -39,8 +41,19 @@
       <div v-if="error" class="notif error">❌ {{ error }}</div>
     </transition>
 
-    <!-- List -->
-    <DownloadList :downloads="descargas" @reintentar="reintentar" />
+    <!-- Lista de descargas -->
+    <DownloadList
+      :downloads="descargas"
+      @reintentar="reintentar"
+      @ver-detalle="descargaSeleccionada = $event"
+    />
+
+    <!-- Modal de detalle -->
+    <DownloadCard
+      v-if="descargaSeleccionada"
+      :download="descargaSeleccionada"
+      @cerrar="descargaSeleccionada = null"
+    />
   </div>
 </template>
 
@@ -48,12 +61,15 @@
 import { computed, ref } from 'vue'
 import DownloadForm from '../components/DownloadForm.vue'
 import DownloadList from '../components/DownloadList.vue'
+import DownloadCard from '../components/DownloadCard.vue'
+import ErrorBoundary from '../components/ErrorBoundary.vue'
 import { useDownloads } from '../composables/useDownloads'
 import { downloadService } from '../services/downloadService'
-import type { CrearDescargaDTO } from '../types'
+import type { CrearDescargaDTO, Descarga } from '../types'
 
 const { descargas, error, fetchDescargas, reintentar } = useDownloads()
 const successMsg = ref<string | null>(null)
+const descargaSeleccionada = ref<Descarga | null>(null)
 
 const enProgreso  = computed(() => descargas.value.filter(d => d.estado === 'in_progress').length)
 const completadas = computed(() => descargas.value.filter(d => d.estado === 'completed').length)

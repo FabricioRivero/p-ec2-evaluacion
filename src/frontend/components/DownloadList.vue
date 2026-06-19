@@ -1,6 +1,13 @@
+<!--
+ * DownloadList.vue
+ * Tabla de descargas con colores por estado y acciones disponibles.
+ * @prop downloads - Array de descargas a mostrar
+ * @emit reintentar - Emite el ID de la descarga a reintentar
+ * @emit verDetalle - Emite el objeto Descarga seleccionado
+-->
 <template>
   <div class="list-card">
-    <h2> Descargas ({{ downloads.length }})</h2>
+    <h2>📋 Descargas ({{ downloads.length }})</h2>
 
     <div v-if="downloads.length === 0" class="empty">
       No hay descargas todavía. ¡Crea una arriba!
@@ -29,12 +36,17 @@
             <td><ProgressBar :progress="d.progreso" /></td>
             <td>{{ d.intentos }} / {{ d.maxReintentos }}</td>
             <td>{{ formatDate(d.fechaCreacion) }}</td>
-            <td>
+            <td class="actions-cell">
+              <button @click="$emit('verDetalle', d)" class="btn-detail">
+                🔍 Detalle
+              </button>
               <button
                 v-if="d.estado === 'error'"
                 @click="$emit('reintentar', d.id)"
                 class="btn-retry"
-              >🔁 Reintentar</button>
+              >
+                🔁 Reintentar
+              </button>
             </td>
           </tr>
         </tbody>
@@ -49,7 +61,10 @@ import DownloadStatus from './DownloadStatus.vue'
 import ProgressBar from './ProgressBar.vue'
 
 defineProps<{ downloads: Descarga[] }>()
-defineEmits<{ (e: 'reintentar', id: string): void }>()
+defineEmits<{
+  (e: 'reintentar', id: string): void
+  (e: 'verDetalle', descarga: Descarga): void
+}>()
 
 const truncate = (url: string) => url.length > 45 ? url.slice(0, 45) + '…' : url
 const formatDate = (iso: string) => new Date(iso).toLocaleString('es-BO')
@@ -67,7 +82,10 @@ td { padding: 10px 8px; border-bottom: 1px solid #f0f4f8; vertical-align: middle
 .row--error td       { background: #fff5f5; }
 .row--completed td   { background: #f0fff4; }
 .row--in_progress td { background: #ebf8ff; }
-.btn-retry { background: #ed8936; color: white; border: none; border-radius: 6px; padding: 5px 12px; cursor: pointer; font-size: 0.82rem; font-weight: 600; }
+.actions-cell { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.btn-detail { background: #667eea; color: white; border: none; border-radius: 6px; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; font-weight: 600; white-space: nowrap; }
+.btn-detail:hover { background: #5a67d8; }
+.btn-retry { background: #ed8936; color: white; border: none; border-radius: 6px; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; font-weight: 600; white-space: nowrap; }
 .btn-retry:hover { background: #dd6b20; }
 .empty { color: #a0aec0; text-align: center; padding: 40px; font-size: 1rem; }
 </style>

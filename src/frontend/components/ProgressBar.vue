@@ -5,6 +5,12 @@
   </div>
 </template>
 
+<!--
+ * ProgressBar.vue
+ * Barra de progreso animada para mostrar el avance de una descarga.
+ * @prop progress - Número entre 0 y 100
+-->
+ 
 <script setup lang="ts">
 defineProps<{ progress: number }>()
 </script>
