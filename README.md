@@ -291,13 +291,3 @@ Repositorio: github.com/FabricioRivero/p-ec2-evaluacion
 | 8 | Sección "Documentación Adicional" al final | Enlace al informe y video |
 
 ---
-
-## 🚀 PRÓXIMO PASO
-
-1. Copia todo el texto de arriba
-2. Reemplaza tu `README.md` actual en el repo
-3. Haz commit:
-```bash
-git add README.md
-git commit -m "docs: update README with cancellation feature and correct structure"
-git push origin main
