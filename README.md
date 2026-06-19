@@ -277,17 +277,3 @@ Repositorio: github.com/FabricioRivero/p-ec2-evaluacion
 
 ---
 
-## ✅ CAMBIOS REALIZADOS EN ESTE README
-
-| # | Cambio | ¿Por qué? |
-|---|--------|-----------|
-| 1 | `__tests__` con doble guión bajo | Coincide con tu repo real y la consigna |
-| 2 | Agregado `DELETE /api/descargas/:id/cancelar` | Endpoint nuevo de cancelación |
-| 3 | Agregado `Fetch API` en Stack Técnico | Usas fetch nativo para cancelar |
-| 4 | Agregado "Botón cancelar" en funcionalidades | Funcionalidad implementada |
-| 5 | Agregado "naranja=cancelado" en colores | Estado nuevo |
-| 6 | Agregado "Canceladas" en estadísticas | Métrica adicional |
-| 7 | Notas en componentes `(con botón cancelar)`, `(incluye cancelado)` | Claridad |
-| 8 | Sección "Documentación Adicional" al final | Enlace al informe y video |
-
----

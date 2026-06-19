@@ -1,13 +1,9 @@
-import { createApp, type DefineComponent } from 'vue'
-import { createPinia } from 'pinia'
-
-declare module '*.vue' {
-  const component: DefineComponent<{}, {}, any>
-  export default component
-}
-
+import { createApp } from 'vue'
 import App from './App.vue'
 
-const app = createApp(App)
-app.use(createPinia())
-app.mount('#app')
+(async () => {
+	const { createPinia } = await import('pinia')
+	const app = createApp(App)
+	app.use(createPinia())
+	app.mount('#app')
+})()
