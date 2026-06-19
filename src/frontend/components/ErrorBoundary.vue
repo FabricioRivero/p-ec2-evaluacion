@@ -11,7 +11,7 @@
       <h3>Algo salió mal</h3>
       <p class="error-detail">{{ mensajeError }}</p>
       <button @click="reintentar" class="btn-retry">
-        🔄 Reintentar
+         Reintentar
       </button>
     </div>
     <slot v-else />

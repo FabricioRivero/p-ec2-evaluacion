@@ -2,6 +2,12 @@
   <span :class="['badge', `badge--${status}`]">{{ label }}</span>
 </template>
 
+<!--
+ * DownloadStatus.vue
+ * Badge visual que indica el estado de una descarga con color semántico.
+ * @prop status - Estado: pending | in_progress | completed | error
+-->
+
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { EstadoDescarga } from '../types'
@@ -10,9 +16,9 @@ const props = defineProps<{ status: EstadoDescarga }>()
 
 const label = computed(() => ({
   pending: '⏳ Pendiente',
-  in_progress: '🔄 En Progreso',
-  completed: '✅ Completado',
-  error: '❌ Error'
+  in_progress: ' En Progreso',
+  completed: ' Completado',
+  error: ' Error'
 }[props.status] ?? props.status))
 </script>
 

@@ -38,14 +38,14 @@
             <td>{{ formatDate(d.fechaCreacion) }}</td>
             <td class="actions-cell">
               <button @click="$emit('verDetalle', d)" class="btn-detail">
-                🔍 Detalle
+                 Detalle
               </button>
               <button
                 v-if="d.estado === 'error'"
                 @click="$emit('reintentar', d.id)"
                 class="btn-retry"
               >
-                🔁 Reintentar
+                 Reintentar
               </button>
             </td>
           </tr>
