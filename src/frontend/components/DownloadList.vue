@@ -7,7 +7,7 @@
 -->
 <template>
   <div class="list-card">
-    <h2>📋 Descargas ({{ downloads.length }})</h2>
+    <h2> Descargas ({{ downloads.length }})</h2>
 
     <div v-if="downloads.length === 0" class="empty">
       No hay descargas todavía. ¡Crea una arriba!
@@ -24,7 +24,7 @@
             <th>Progreso</th>
             <th>Intentos</th>
             <th>Fecha</th>
-            <th>Acciones</th>
+            <th>Acciones</th> 
           </tr>
         </thead>
         <tbody>
@@ -47,6 +47,13 @@
               >
                  Reintentar
               </button>
+              <button
+                v-if="d.estado === 'pending' || d.estado === 'in_progress'"
+                @click="$emit('cancelar', d.id)"
+                class="btn-cancel"
+              >
+                ❌ Cancelar
+              </button>
             </td>
           </tr>
         </tbody>
@@ -64,6 +71,7 @@ defineProps<{ downloads: Descarga[] }>()
 defineEmits<{
   (e: 'reintentar', id: string): void
   (e: 'verDetalle', descarga: Descarga): void
+  (e: 'cancelar', id: string): void
 }>()
 
 const truncate = (url: string) => url.length > 45 ? url.slice(0, 45) + '…' : url
@@ -82,10 +90,14 @@ td { padding: 10px 8px; border-bottom: 1px solid #f0f4f8; vertical-align: middle
 .row--error td       { background: #fff5f5; }
 .row--completed td   { background: #f0fff4; }
 .row--in_progress td { background: #ebf8ff; }
+.row--cancelled td   { background: #fffaf0; }
 .actions-cell { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
 .btn-detail { background: #667eea; color: white; border: none; border-radius: 6px; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; font-weight: 600; white-space: nowrap; }
 .btn-detail:hover { background: #5a67d8; }
 .btn-retry { background: #ed8936; color: white; border: none; border-radius: 6px; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; font-weight: 600; white-space: nowrap; }
 .btn-retry:hover { background: #dd6b20; }
+.btn-cancel { background: #fc8181; color: white; border: none; border-radius: 6px; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; font-weight: 600; white-space: nowrap; }
+.btn-cancel:hover { background: #f56565; }
 .empty { color: #a0aec0; text-align: center; padding: 40px; font-size: 1rem; }
 </style>
+

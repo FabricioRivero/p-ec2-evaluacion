@@ -46,6 +46,7 @@
       :downloads="descargas"
       @reintentar="reintentar"
       @ver-detalle="descargaSeleccionada = $event"
+      @cancelar="cancelarDescarga"
     />
 
     <!-- Modal de detalle -->
@@ -80,6 +81,27 @@ async function crearDescarga(data: CrearDescargaDTO) {
   successMsg.value = `Descarga iniciada: ${data.url}`
   setTimeout(() => { successMsg.value = null }, 3000)
   await fetchDescargas()
+}
+
+async function cancelarDescarga(id: string) {
+  try {
+    const response = await fetch(`/api/descargas/${id}/cancelar`, {
+      method: 'DELETE'
+    })
+    
+    if (!response.ok) {
+      const errorData = await response.json() as Record<string, any>
+      error.value = errorData.message || 'Error al cancelar la descarga'
+      return
+    }
+    
+    successMsg.value = `Descarga ${id.slice(0, 8)}... cancelada exitosamente`
+    setTimeout(() => { successMsg.value = null }, 3000)
+    await fetchDescargas()
+  } catch (err: any) {
+    error.value = `Error al cancelar: ${err.message}`
+    setTimeout(() => { error.value = null }, 3000)
+  }
 }
 </script>
 

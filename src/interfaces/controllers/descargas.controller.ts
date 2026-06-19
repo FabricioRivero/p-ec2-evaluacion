@@ -75,3 +75,21 @@ export const reintentarDescarga = async (
         }
     }
 };
+
+export const cancelarDescarga = async (
+    req: Request, res: Response, next: NextFunction
+): Promise<void> => {
+    try {
+        const { id } = req.params;
+        const descarga = descargaService.cancelarDescarga(id);
+        res.json({ message: `Descarga ${id} cancelada exitosamente`, descarga });
+    } catch (error: any) {
+        if (error.message === 'Descarga no encontrada') {
+            res.status(404).json({ message: error.message });
+        } else if (error.message.includes('completada') || error.message.includes('cancelada')) {
+            res.status(400).json({ message: error.message });
+        } else {
+            next(error);
+        }
+    }
+};

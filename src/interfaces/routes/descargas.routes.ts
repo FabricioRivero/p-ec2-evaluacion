@@ -3,7 +3,8 @@ import {
   crearDescarga,
   obtenerEstadoDescarga,
   listarDescargas,
-  reintentarDescarga
+  reintentarDescarga,
+  cancelarDescarga
 } from '../controllers/descargas.controller';
 import { validarCreacionDescarga } from '../middleware/validationMiddleware';
 
@@ -72,5 +73,26 @@ router.get('/:id/estado', obtenerEstadoDescarga);
  *           type: string
  */
 router.post('/:id/reintentar', reintentarDescarga);
+
+/**
+ * @swagger
+ * /api/descargas/{id}/cancelar:
+ *   delete:
+ *     summary: Cancelar una descarga en progreso
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Descarga cancelada exitosamente
+ *       404:
+ *         description: Descarga no encontrada
+ *       400:
+ *         description: No se puede cancelar la descarga
+ */
+router.delete('/:id/cancelar', cancelarDescarga);
 
 export default router;

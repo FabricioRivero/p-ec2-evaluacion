@@ -2,7 +2,7 @@ export class Descarga {
     id: string;
     url: string;
     tipo: string;
-    estado: 'pending' | 'in_progress' | 'completed' | 'error';
+    estado: 'pending' | 'in_progress' | 'completed' | 'error' | 'cancelled';
     progreso: number;
     intentos: number;
     maxReintentos: number;
@@ -43,6 +43,17 @@ export class Descarga {
         this.estado = 'pending';
         this.progreso = 0;
         this.error = undefined;
+    }
+
+    cancelar() {
+        if (this.estado === 'completed') {
+            throw new Error('No se puede cancelar una descarga ya completada');
+        }
+        if (this.estado === 'cancelled') {
+            throw new Error('La descarga ya ha sido cancelada');
+        }
+        this.estado = 'cancelled';
+        this.error = 'Descarga cancelada por el usuario';
     }
 }
 

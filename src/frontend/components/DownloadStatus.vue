@@ -18,7 +18,8 @@ const label = computed(() => ({
   pending: '⏳ Pendiente',
   in_progress: ' En Progreso',
   completed: ' Completado',
-  error: ' Error'
+  error: ' Error',
+  cancelled: '❌ Cancelado'
 }[props.status] ?? props.status))
 </script>
 
@@ -28,4 +29,5 @@ const label = computed(() => ({
 .badge--in_progress{ background: #bee3f8; color: #2b6cb0; }
 .badge--completed  { background: #c6f6d5; color: #276749; }
 .badge--error      { background: #fed7d7; color: #c53030; }
+.badge--cancelled  { background: #feebc8; color: #c05621; }
 </style>

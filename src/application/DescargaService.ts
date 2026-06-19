@@ -18,7 +18,7 @@ export class DescargaService {
             maxReintentos
         }).then((respuesta) => {
             const descarga = this.descargas.get(respuesta.id);
-            if (descarga) {
+            if (descarga && descarga.estado !== 'cancelled') {
                 if (respuesta.success) {
                     descarga.actualizarProgreso(100);
                 } else {
@@ -27,7 +27,7 @@ export class DescargaService {
             }
         }).catch(error => {
             const descarga = this.descargas.get(id);
-            if (descarga) descarga.marcarComoError(String(error));
+            if (descarga && descarga.estado !== 'cancelled') descarga.marcarComoError(String(error));
         });
 
         return nuevaDescarga;
@@ -51,7 +51,7 @@ export class DescargaService {
             maxReintentos: descarga.maxReintentos
         }).then((respuesta) => {
             const d = this.descargas.get(respuesta.id);
-            if (d) {
+            if (d && d.estado !== 'cancelled') {
                 if (respuesta.success) {
                     d.actualizarProgreso(100);
                 } else {
@@ -60,7 +60,7 @@ export class DescargaService {
             }
         }).catch(error => {
             const d = this.descargas.get(id);
-            if (d) d.marcarComoError(String(error));
+            if (d && d.estado !== 'cancelled') d.marcarComoError(String(error));
         });
 
         return descarga;
@@ -72,5 +72,17 @@ export class DescargaService {
 
     obtenerPorId(id: string): Descarga | undefined {
         return this.descargas.get(id);
+    }
+
+    cancelarDescarga(id: string): Descarga {
+        const descarga = this.descargas.get(id);
+        if (!descarga) {
+            throw new Error('Descarga no encontrada');
+        }
+        if (descarga.estado !== 'pending' && descarga.estado !== 'in_progress') {
+            throw new Error(`No se puede cancelar una descarga en estado ${descarga.estado}`);
+        }
+        descarga.cancelar();
+        return descarga;
     }
 }

@@ -1,4 +1,4 @@
-export type EstadoDescarga = 'pending' | 'in_progress' | 'completed' | 'error'
+export type EstadoDescarga = 'pending' | 'in_progress' | 'completed' | 'error' | 'cancelled'
 export type TipoDescarga = 'http' | 'ftp' | 'mock'
 
 export interface Descarga {
