@@ -180,7 +180,7 @@ npx vitest run
 
 ### Solo tests unitarios
 ```bash
-npx vitest run src/__tests__/unit
+npx vitest run src/__tests__/unit/UrlDescarga.test.ts
 ```
 
 ### Solo tests de integración
@@ -192,7 +192,6 @@ npx vitest run src/frontend/__tests__/integration/downloadAPI.test.ts
 ```bash
 npx vitest run src/frontend/__tests__/integration/e2e/downloadFlow.spec.ts
 ```
-
 ---
 
 ## 📊 Resultados de Tests
@@ -270,7 +269,7 @@ curl -X POST http://localhost:3000/api/descargas \
 
 📄 Documentación Adicional
 Informe Técnico: Ver Informe_EC3_FabricioRivero.pdf en el repositorio
-Video de Presentación: Disponible en [enlace al video]
+Video de Presentación: Disponible en [https://drive.google.com/file/d/1WyOTgqXfpVj6mF8aSG6Umr7Yi7EOMDiO/view?usp=sharing]
 Repositorio: github.com/FabricioRivero/p-ec2-evaluacion
 
 

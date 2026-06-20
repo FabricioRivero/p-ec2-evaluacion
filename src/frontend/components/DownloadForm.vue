@@ -37,6 +37,12 @@
   </div>
 </template>
 
+<!-- 
+ * DownloadForm.vue
+ * Formulario para crear nuevas descargas.
+ * @prop onSubmit - Función callback que recibe los datos del formulario
+-->
+ 
 <script setup lang="ts">
 import { useDownloadForm } from '../composables/useDownloadForm'
 import type { CrearDescargaDTO } from '../types'
